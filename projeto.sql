@@ -5,7 +5,7 @@ CREATE DATABASE sistema_carros;
 USE sistema_carros;
 
 
-CREATE TABLE IF NOT EXISTS carros (
+CREATE TABLE carros (
     id INT AUTO_INCREMENT PRIMARY KEY,
     marca VARCHAR(100) NOT NULL,
     modelo VARCHAR(100) NOT NULL,

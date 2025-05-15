@@ -28,15 +28,28 @@ def listar_carros():
 def deletar_carro():
     listar_carros()
     try:
-        id_carro = int(input("\nDigite o ID do carro que deseja deletar: "))
-        cursor.execute("DELETE FROM carros WHERE id = %s", (id_carro,))
+        ids_input = input("\nDigite os IDs dos carros que deseja deletar (ex: 1,3,5): ")
+        ids_str = ids_input.split(",")
+        ids = [int(id.strip()) for id in ids_str if id.strip().isdigit()]
+        
+        if not ids:
+            print("Nenhum ID válido informado.")
+            return
+        
+        format_strings = ','.join(['%s'] * len(ids))
+        sql = f"DELETE FROM carros WHERE id IN ({format_strings})"
+        cursor.execute(sql, tuple(ids))
         db.commit()
+
         if cursor.rowcount > 0:
-            print("Carro deletado com sucesso!")
+            print(f"{cursor.rowcount} carro(s) deletado(s) com sucesso!")
         else:
-            print("Carro não encontrado.")
+            print("Nenhum carro encontrado com os IDs informados.")
     except ValueError:
-        print("ID inválido.")
+        print("Erro: Verifique os IDs informados.")
+    except Exception as e:
+        print("Erro ao deletar:", e)
+
 
 
 def atualizar_carro():
