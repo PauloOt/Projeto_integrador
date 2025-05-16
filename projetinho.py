@@ -1,115 +1,117 @@
 import mysql.connector
 
 
-
-def cadastrar_carro():
-    marca = input("Digite a marca: ")
-    modelo = input("Digite o modelo: ")
-    ano = int(input("Digite o ano: "))
-
-    sql = "INSERT INTO carros (marca, modelo, ano) VALUES (%s, %s, %s)"
-    valores = (marca, modelo, ano)
-    cursor.execute(sql, valores)
-    db.commit()
-    print("Carro cadastrado com sucesso!")
-
-
-def listar_carros():
-    cursor.execute("SELECT id, marca, modelo, ano FROM carros")
-    resultados = cursor.fetchall()
-    if resultados:
-        print("\n=== Lista de Carros ===")
-        for carro in resultados:
-            print(f"ID: {carro[0]} | Marca: {carro[1]} | Modelo: {carro[2]} | Ano: {carro[3]}")
-    else:
-        print("Nenhum carro cadastrado.")
-
-
-def deletar_carro():
-    listar_carros()
-    try:
-        ids_input = input("\nDigite os IDs dos carros que deseja deletar (ex: 1,3,5): ")
-        ids_str = ids_input.split(",")
-        ids = [int(id.strip()) for id in ids_str if id.strip().isdigit()]
-        
-        if not ids:
-            print("Nenhum ID válido informado.")
-            return
-        
-        format_strings = ','.join(['%s'] * len(ids))
-        sql = f"DELETE FROM carros WHERE id IN ({format_strings})"
-        cursor.execute(sql, tuple(ids))
-        db.commit()
-
-        if cursor.rowcount > 0:
-            print(f"{cursor.rowcount} carro(s) deletado(s) com sucesso!")
-        else:
-            print("Nenhum carro encontrado com os IDs informados.")
-    except ValueError:
-        print("Erro: Verifique os IDs informados.")
-    except Exception as e:
-        print("Erro ao deletar:", e)
-
-
-
-def atualizar_carro():
-    listar_carros()
-    try:
-        id_carro = int(input("\nDigite o ID do carro que deseja atualizar: "))
-        cursor.execute("SELECT marca, modelo, ano FROM carros WHERE id = %s", (id_carro,))
-        carro = cursor.fetchone()
-
-        if not carro:
-            print("Carro não encontrado.")
-            return
-
-        print("Digite os novos dados (pressione Enter para manter o valor atual):")
-        nova_marca = input(f"Marca atual ({carro[0]}): ") or carro[0]
-        novo_modelo = input(f"Modelo atual ({carro[1]}): ") or carro[1]
-        novo_ano = input(f"Ano atual ({carro[2]}): ") or carro[2]
-
-        sql = """
-            UPDATE carros
-            SET marca = %s, modelo = %s, ano = %s
-            WHERE id = %s
-        """
-        valores = (nova_marca, novo_modelo, int(novo_ano), id_carro)
-        cursor.execute(sql, valores)
-        db.commit()
-        print("Carro atualizado com sucesso!")
-
-    except Exception as e:
-        print("Erro ao atualizar:", e)
-
-
 db = mysql.connector.connect(
     host="localhost",
     user="root",
-    password="070506", 
+    password="070506",
     database="sistema_carros"
 )
 
 cursor = db.cursor()
 
+def cadastrar_cliente():
+    nome = input("Nome: ")
+    email = input("Email: ")
+    telefone = input("Telefone: ")
+    cursor.execute("INSERT INTO clientes (nome, email, telefone) VALUES (%s, %s, %s)", (nome, email, telefone))
+    db.commit()
+    print("Cliente cadastrado.")
+
+def listar_clientes():
+    cursor.execute("SELECT * FROM clientes")
+    for c in cursor.fetchall():
+        print(f"ID: {c[0]} | Nome: {c[1]} | Email: {c[2]} | Telefone: {c[3]}")
+
+def atualizar_cliente():
+    listar_clientes()
+    cliente_id = int(input("ID do cliente para atualizar: "))
+    nome = input("Novo nome: ")
+    email = input("Novo email: ")
+    telefone = input("Novo telefone: ")
+    cursor.execute("UPDATE clientes SET nome = %s, email = %s, telefone = %s WHERE id = %s",
+                   (nome, email, telefone, cliente_id))
+    db.commit()
+    print("Cliente atualizado.")
+
+def deletar_cliente():
+    listar_clientes()
+    cliente_id = int(input("ID do cliente para deletar: "))
+    cursor.execute("DELETE FROM clientes WHERE id = %s", (cliente_id,))
+    db.commit()
+    print("Cliente e seus carros deletados.")
+
+def cadastrar_carro():
+    listar_clientes()
+    cliente_id = int(input("ID do cliente para o carro: "))
+    marca = input("Marca: ")
+    modelo = input("Modelo: ")
+    ano = int(input("Ano: "))
+    cursor.execute("INSERT INTO carros (marca, modelo, ano, cliente_id) VALUES (%s, %s, %s, %s)",
+                   (marca, modelo, ano, cliente_id))
+    db.commit()
+    print("Carro cadastrado.")
+
+def listar_carros():
+    cursor.execute("""
+        SELECT carros.id, marca, modelo, ano, clientes.nome
+        FROM carros
+        JOIN clientes ON carros.cliente_id = clientes.id
+    """)
+    for c in cursor.fetchall():
+        print(f"ID: {c[0]} | {c[1]} {c[2]} {c[3]} | Cliente: {c[4]}")
+
+def atualizar_carro():
+    listar_carros()
+    carro_id = int(input("ID do carro para atualizar: "))
+    marca = input("Nova marca: ")
+    modelo = input("Novo modelo: ")
+    ano = int(input("Novo ano: "))
+    cursor.execute("UPDATE carros SET marca = %s, modelo = %s, ano = %s WHERE id = %s",
+                   (marca, modelo, ano, carro_id))
+    db.commit()
+    print("Carro atualizado.")
+
+def deletar_carro():
+    listar_carros()
+    carro_id = int(input("ID do carro para deletar: "))
+    cursor.execute("DELETE FROM carros WHERE id = %s", (carro_id,))
+    db.commit()
+    print("Carro deletado.")
+
 
 while True:
     print("\n=== MENU ===")
-    print("1 - Cadastrar carro")
-    print("2 - Atualizar carro")
-    print("3 - Deletar carro")
-    print("4 - Listar carros")
-    print("5 - Sair")
-    opcao = input("Escolha uma opção: ")
+    print("1 - Cadastrar cliente")
+    print("2 - Listar clientes")
+    print("3 - Atualizar cliente")
+    print("4 - Deletar cliente")
+    print("5 - Cadastrar carro")
+    print("6 - Listar carros")
+    print("7 - Atualizar carro")
+    print("8 - Deletar carro")
 
-    if opcao == "1":
+    print("9 - Sair")
+
+    op = input("Opção: ")
+
+    if op == "1":
+        cadastrar_cliente()
+    elif op == "2":
+        listar_clientes()
+    elif op == "3":
+        atualizar_cliente()
+    elif op == "4":
+        deletar_cliente()
+    elif op == "5":
         cadastrar_carro()
-    elif opcao == "2":
-        atualizar_carro()
-    elif opcao == "3":
-        deletar_carro()
-    elif opcao == "4":
+    elif op == "6":
         listar_carros()
-    elif opcao == "5":
+    elif op == "7":
+        atualizar_carro()
+    elif op == "8":
+        deletar_carro()
+    elif op == "9":
         print("Saindo...")
         break
     else:

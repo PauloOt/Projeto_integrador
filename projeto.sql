@@ -1,17 +1,22 @@
 
 CREATE DATABASE sistema_carros;
-
-
 USE sistema_carros;
 
+CREATE TABLE clientes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100),
+    email VARCHAR(100),
+    telefone VARCHAR(20)
+);
 
 CREATE TABLE carros (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    marca VARCHAR(100) NOT NULL,
-    modelo VARCHAR(100) NOT NULL,
-    ano INT NOT NULL,
-    cor VARCHAR(50),
-    valor DECIMAL(10,2)
+    marca VARCHAR(100),
+    modelo VARCHAR(100),
+    ano INT,
+    cliente_id INT,
+    FOREIGN KEY (cliente_id) REFERENCES clientes(id) ON DELETE CASCADE
+    
 );
 
-SELECT * FROM carros;
+select * from carros;
