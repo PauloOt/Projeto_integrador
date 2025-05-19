@@ -82,18 +82,22 @@ def deletar_carro():
 
 while True:
     print("\n=== MENU ===")
+
+    print("=== CLIENTES ===")
     print("1 - Cadastrar cliente")
     print("2 - Listar clientes")
     print("3 - Atualizar cliente")
     print("4 - Deletar cliente")
+
+    print("\n=== CARROS ===")
     print("5 - Cadastrar carro")
     print("6 - Listar carros")
     print("7 - Atualizar carro")
     print("8 - Deletar carro")
 
-    print("9 - Sair")
+    print("\n9 - Sair")
 
-    op = input("Opção: ")
+    op = input("\nOpção: ")
 
     if op == "1":
         cadastrar_cliente()
@@ -116,3 +120,4 @@ while True:
         break
     else:
         print("Opção inválida.")
+
