@@ -1,6 +1,5 @@
 import mysql.connector
 
-
 db = mysql.connector.connect(
     host="localhost",
     user="root",
@@ -9,6 +8,7 @@ db = mysql.connector.connect(
 )
 
 cursor = db.cursor()
+
 
 def cadastrar_cliente():
     nome = input("Nome: ")
@@ -40,6 +40,7 @@ def deletar_cliente():
     cursor.execute("DELETE FROM clientes WHERE id = %s", (cliente_id,))
     db.commit()
     print("Cliente e seus carros deletados.")
+
 
 def cadastrar_carro():
     listar_clientes()
@@ -80,44 +81,66 @@ def deletar_carro():
     print("Carro deletado.")
 
 
+def menu_clientes():
+    while True:
+        print("\n=== MENU CLIENTES ===")
+        print("1 - Cadastrar cliente")
+        print("2 - Listar clientes")
+        print("3 - Atualizar cliente")
+        print("4 - Deletar cliente")
+        print("5 - Voltar")
+
+        op = input("Opção: ")
+        if op == "1":
+            cadastrar_cliente()
+        elif op == "2":
+            listar_clientes()
+        elif op == "3":
+            atualizar_cliente()
+        elif op == "4":
+            deletar_cliente()
+        elif op == "5":
+            break
+        else:
+            print("Opção inválida.")
+
+def menu_carros():
+    while True:
+        print("\n=== MENU CARROS ===")
+        print("1 - Cadastrar carro")
+        print("2 - Listar carros")
+        print("3 - Atualizar carro")
+        print("4 - Deletar carro")
+        print("5 - Voltar")
+
+        op = input("Opção: ")
+        if op == "1":
+            cadastrar_carro()
+        elif op == "2":
+            listar_carros()
+        elif op == "3":
+            atualizar_carro()
+        elif op == "4":
+            deletar_carro()
+        elif op == "5":
+            break
+        else:
+            print("Opção inválida.")
+
+
 while True:
-    print("\n=== MENU ===")
+    print("\n=== MENU PRINCIPAL ===")
+    print("1 - Gerenciar Clientes")
+    print("2 - Gerenciar Carros")
+    print("3 - Sair")
 
-    print("=== CLIENTES ===")
-    print("1 - Cadastrar cliente")
-    print("2 - Listar clientes")
-    print("3 - Atualizar cliente")
-    print("4 - Deletar cliente")
-
-    print("\n=== CARROS ===")
-    print("5 - Cadastrar carro")
-    print("6 - Listar carros")
-    print("7 - Atualizar carro")
-    print("8 - Deletar carro")
-
-    print("\n9 - Sair")
-
-    op = input("\nOpção: ")
-
+    op = input("Opção: ")
     if op == "1":
-        cadastrar_cliente()
+        menu_clientes()
     elif op == "2":
-        listar_clientes()
+        menu_carros()
     elif op == "3":
-        atualizar_cliente()
-    elif op == "4":
-        deletar_cliente()
-    elif op == "5":
-        cadastrar_carro()
-    elif op == "6":
-        listar_carros()
-    elif op == "7":
-        atualizar_carro()
-    elif op == "8":
-        deletar_carro()
-    elif op == "9":
         print("Saindo...")
         break
     else:
         print("Opção inválida.")
-        
