@@ -1,9 +1,10 @@
 import mysql.connector
 
 db = mysql.connector.connect(
+
     host="localhost",
     user="root",
-    password="070506",
+    password="",
     database="sistema_carros"
 )
 
@@ -16,7 +17,7 @@ def cadastrar_cliente():
     telefone = input("Telefone: ")
     cursor.execute("INSERT INTO clientes (nome, email, telefone) VALUES (%s, %s, %s)", (nome, email, telefone))
     db.commit()
-    print("Cliente cadastrado.")
+    print("\033[1;32mCliente cadastrado.\033[m")
 
 def listar_clientes():
     cursor.execute("SELECT * FROM clientes")
@@ -32,14 +33,14 @@ def atualizar_cliente():
     cursor.execute("UPDATE clientes SET nome = %s, email = %s, telefone = %s WHERE id = %s",
                    (nome, email, telefone, cliente_id))
     db.commit()
-    print("Cliente atualizado.")
+    print("\033[1;32mCliente atualizado.\033[m")
 
 def deletar_cliente():
     listar_clientes()
     cliente_id = int(input("ID do cliente para deletar: "))
     cursor.execute("DELETE FROM clientes WHERE id = %s", (cliente_id,))
     db.commit()
-    print("Cliente e seus carros deletados.")
+    print("\033[1;32mCliente e seus carros deletados.\033[m")
 
 
 def cadastrar_carro():
@@ -51,7 +52,7 @@ def cadastrar_carro():
     cursor.execute("INSERT INTO carros (marca, modelo, ano, cliente_id) VALUES (%s, %s, %s, %s)",
                    (marca, modelo, ano, cliente_id))
     db.commit()
-    print("Carro cadastrado.")
+    print("\033[1;32mCarro cadastrado.\033[m")
 
 def listar_carros():
     cursor.execute("""
@@ -71,19 +72,19 @@ def atualizar_carro():
     cursor.execute("UPDATE carros SET marca = %s, modelo = %s, ano = %s WHERE id = %s",
                    (marca, modelo, ano, carro_id))
     db.commit()
-    print("Carro atualizado.")
+    print("\033[1;32mCarro atualizado.\033[m")
 
 def deletar_carro():
     listar_carros()
     carro_id = int(input("ID do carro para deletar: "))
     cursor.execute("DELETE FROM carros WHERE id = %s", (carro_id,))
     db.commit()
-    print("Carro deletado.")
+    print("\033[1;93mCarro deletado.\033[m")
 
 
 def menu_clientes():
     while True:
-        print("\n=== MENU CLIENTES ===")
+        print("\033[1;93m=== MENU CLIENTES ===\033[m")
         print("1 - Cadastrar cliente")
         print("2 - Listar clientes")
         print("3 - Atualizar cliente")
@@ -102,11 +103,11 @@ def menu_clientes():
         elif op == "5":
             break
         else:
-            print("Opção inválida.")
+            print("\033[1;31mOpção inválida.\033[m")
 
 def menu_carros():
     while True:
-        print("\n=== MENU CARROS ===")
+        print("\n\033[1;93m=== MENU CARROS ===\033[m")
         print("1 - Cadastrar carro")
         print("2 - Listar carros")
         print("3 - Atualizar carro")
@@ -125,11 +126,11 @@ def menu_carros():
         elif op == "5":
             break
         else:
-            print("Opção inválida.")
+            print("\033[1;31mOpção inválida.\033[m")
 
 
 while True:
-    print("\n=== MENU PRINCIPAL ===")
+    print("\n\033[1;93m=== MENU PRINCIPAL ===\033[m")
     print("1 - Gerenciar Clientes")
     print("2 - Gerenciar Carros")
     print("3 - Sair")
@@ -143,4 +144,5 @@ while True:
         print("Saindo...")
         break
     else:
-        print("Opção inválida.")
+        print("\033[1;31mOpção inválida.\033[m")
+        
